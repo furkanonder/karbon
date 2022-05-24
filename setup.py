@@ -36,7 +36,7 @@ setup(
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Topic :: Games/Entertainment",
-        "Topic ::Topic :: Artistic Software",
+        "Topic :: Artistic Software",
         "Intended Audience :: End Users/Desktop",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
