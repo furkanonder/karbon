@@ -35,7 +35,7 @@ class Karbon:
         self.bg.fill(BLACK)
         self.clock = pg.time.Clock()
         self.clear_btn = UIButton(
-            relative_rect=pg.Rect(-220, -80, 140, 30),
+            relative_rect=pg.Rect(-220, -140, 140, 30),
             text="Clear",
             manager=self.ui_manager,
             anchors={
@@ -45,8 +45,19 @@ class Karbon:
                 "bottom": "bottom",
             },
         )
+        self.snapshot_btn = UIButton(
+            relative_rect=pg.Rect(-220, -190, 140, 30),
+            text="Snapshot",
+            manager=self.ui_manager,
+            anchors={
+                "left": "right",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
+        )
         self.save_btn = UIButton(
-            relative_rect=pg.Rect(-220, -140, 140, 30),
+            relative_rect=pg.Rect(-220, -240, 140, 30),
             text="Save as Image",
             manager=self.ui_manager,
             anchors={
@@ -74,6 +85,8 @@ class Karbon:
                 if event.type == pg_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == self.clear_btn:
                         self.bg.fill(BLACK)
+                    if event.ui_element == self.snapshot_btn:
+                        pg.image.save(self.bg, f"./screenshots/karbon-screenshot_snapshot_{time.time()}.jpg")
                     if event.ui_element == self.save_btn:
                         f_dialog = CustomUIFileDialog(
                             pg.Rect(160, 50, 440, 500),
