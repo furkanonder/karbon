@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pygame as pg
 import pygame_gui as pg_gui
+import time
 from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UIButton
 from pygame_gui.windows import UIFileDialog
@@ -99,7 +100,7 @@ class Karbon:
                     self.save_btn.enable()
                     f_dialog = None
                     if img_path:
-                        pg.image.save(self.bg, f"{img_path}/karbon-screenshot.jpg")
+                        pg.image.save(self.bg, f"{img_path}/karbon-screenshot_{time.time()}.jpg")
                         img_path = None
 
                 self.ui_manager.process_events(event)
