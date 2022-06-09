@@ -81,9 +81,11 @@ class Karbon:
             time_delta = self.clock.tick(60) / 1000.0
             for event in pg.event.get():
                 if event.type == pg.QUIT:
+                    pg.image.save(self.bg, f"./screenshots/karbon-screenshot_on_quit_{time.time()}.jpg")
                     is_running = False
                 if event.type == pg_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == self.clear_btn:
+                        pg.image.save(self.bg, f"./screenshots/karbon-screenshot_on_clear_{time.time()}.jpg")
                         self.bg.fill(BLACK)
                     if event.ui_element == self.snapshot_btn:
                         pg.image.save(self.bg, f"./screenshots/karbon-screenshot_snapshot_{time.time()}.jpg")
