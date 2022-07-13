@@ -135,3 +135,6 @@ pip-selfcheck.json
 
 
 # End of https://www.gitignore.io/api/python
+
+
+screenshots/*.jpg
