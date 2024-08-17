@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pygame as pg
 import pygame_gui as pg_gui
-import time
 from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UIButton
 from pygame_gui.windows import UIFileDialog
@@ -35,7 +34,7 @@ class Karbon:
         self.bg.fill(BLACK)
         self.clock = pg.time.Clock()
         self.clear_btn = UIButton(
-            relative_rect=pg.Rect(-220, -140, 140, 30),
+            relative_rect=pg.Rect(-220, -80, 140, 30),
             text="Clear",
             manager=self.ui_manager,
             anchors={
@@ -45,19 +44,8 @@ class Karbon:
                 "bottom": "bottom",
             },
         )
-        self.snapshot_btn = UIButton(
-            relative_rect=pg.Rect(-220, -190, 140, 30),
-            text="Snapshot",
-            manager=self.ui_manager,
-            anchors={
-                "left": "right",
-                "right": "right",
-                "top": "bottom",
-                "bottom": "bottom",
-            },
-        )
         self.save_btn = UIButton(
-            relative_rect=pg.Rect(-220, -240, 140, 30),
+            relative_rect=pg.Rect(-220, -140, 140, 30),
             text="Save as Image",
             manager=self.ui_manager,
             anchors={
@@ -81,14 +69,10 @@ class Karbon:
             time_delta = self.clock.tick(60) / 1000.0
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    pg.image.save(self.bg, f"./screenshots/karbon-screenshot_on_quit_{time.time()}.jpg")
                     is_running = False
                 if event.type == pg_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == self.clear_btn:
-                        pg.image.save(self.bg, f"./screenshots/karbon-screenshot_on_clear_{time.time()}.jpg")
                         self.bg.fill(BLACK)
-                    if event.ui_element == self.snapshot_btn:
-                        pg.image.save(self.bg, f"./screenshots/karbon-screenshot_snapshot_{time.time()}.jpg")
                     if event.ui_element == self.save_btn:
                         f_dialog = CustomUIFileDialog(
                             pg.Rect(160, 50, 440, 500),
@@ -115,7 +99,7 @@ class Karbon:
                     self.save_btn.enable()
                     f_dialog = None
                     if img_path:
-                        pg.image.save(self.bg, f"{img_path}/karbon-screenshot_{time.time()}.jpg")
+                        pg.image.save(self.bg, f"{img_path}/karbon-screenshot.jpg")
                         img_path = None
 
                 self.ui_manager.process_events(event)
