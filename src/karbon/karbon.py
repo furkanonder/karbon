@@ -9,18 +9,15 @@ from pygame_gui.elements import UIButton
 from pygame_gui.windows import UIFileDialog
 from pynput import mouse
 
-
 LINE_COLOR = (64, 224, 208)
 WHITE = (255, 255, 255)
 YELLOW = (255, 255, 0)
 BLACK = (0, 0, 0)
 
 
-
 class CustomUIFileDialog(UIFileDialog):
-    """
-    Custom file dialog to filter and show only directories
-    """
+    """Custom file dialog to filter and show only directories."""
+
     def update_current_file_list(self):
         super().update_current_file_list()
         self.current_file_list = [

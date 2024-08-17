@@ -40,9 +40,6 @@ dependencies = [
 [project.scripts]
 karbon = "karbon.__main__:main"
 
-[tool.black]
-preview = true
-
 [tool.docformatter]
 recursive = true
 wrap-summaries = 79
@@ -56,10 +53,11 @@ ignore_missing_imports = true
 show_error_codes = true
 
 [tool.ruff]
-select = [
+line-length = 119
+lint.select = [
   "E",   # pycodestyle
   "F",   # pyflakes
   "UP",  # pyupgrade,
   "I",   # isort
 ]
-mccabe = { max-complexity = 14 }
+lint.mccabe = { max-complexity = 14 }
