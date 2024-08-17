@@ -2,6 +2,7 @@
 *.db
 *.scssc
 *.map
+*.idea
 media
 
 # Created by https://www.gitignore.io/api/python
@@ -133,8 +134,4 @@ dmypy.json
 pyvenv.cfg
 pip-selfcheck.json
 
-
 # End of https://www.gitignore.io/api/python
-
-
-screenshots/*.jpg

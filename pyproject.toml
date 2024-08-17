@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "karbon"
+version = "0.2.0"
+description = "Turn mouse events into art!"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE.txt"}
+keywords = ["mouse tracking", "karbon"]
+authors = [{ name = "Furkan Onder", email = "furkanonder@protonmail.com" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Games/Entertainment",
+    "Topic :: Artistic Software",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Operating System :: Microsoft :: Windows",
+]
+dependencies = [
+    "pygame-ce==2.5.1",
+    "pygame-gui==0.6.12",
+    "pynput==1.7.6",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/furkanonder/karbon"
+"Bug Reports" = "https://github.com/furkanonder/karbon/issues"
+"Source" = "https://github.com/furkanonder/karbon"
+
+[project.scripts]
+karbon = "karbon.__main__:main"
+
+[tool.black]
+preview = true
+
+[tool.docformatter]
+recursive = true
+wrap-summaries = 79
+wrap-descriptions = 79
+blank = true
+
+[tool.mypy]
+warn_unused_configs = true
+no_strict_optional = true
+ignore_missing_imports = true
+show_error_codes = true
+
+[tool.ruff]
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "UP",  # pyupgrade,
+  "I",   # isort
+]
+mccabe = { max-complexity = 14 }
