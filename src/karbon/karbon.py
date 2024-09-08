@@ -70,8 +70,8 @@ class Karbon:
         return datetime.now().strftime("%Y%m%d_%H%M%S")
 
     @staticmethod
-    def create_screenshot_folder() -> Path:
-        directory_path = Path.home() / ".karbon_screenshots"
+    def create_snapshot_folder() -> Path:
+        directory_path = Path.home() / ".karbon_snapshots"
         if not directory_path.exists():
             directory_path.mkdir(parents=True, exist_ok=True)
         return directory_path
@@ -79,7 +79,7 @@ class Karbon:
     def run(self) -> None:
         img_path, f_dialog = None, None
         is_running = True
-        screenshot_folder_path = self.create_screenshot_folder()
+        snapshot_folder_path = self.create_snapshot_folder()
 
         while is_running:
             # Limit the frame rate to 60 FPS
@@ -96,7 +96,7 @@ class Karbon:
                     if event.ui_element == self.snapshot_btn:
                         pg.image.save(
                             self.bg,
-                            f"{screenshot_folder_path}/snapshot_{self.get_current_datetime()}.png",
+                            f"{snapshot_folder_path}/snapshot_{self.get_current_datetime()}.png",
                         )
                     # Show the file save dialog
                     if event.ui_element == self.save_btn:
