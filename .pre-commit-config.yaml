@@ -26,5 +26,6 @@ repos:
     hooks:
       # Linter
       - id: ruff
+        args: [--fix]
       # Formatter
       - id: ruff-format
