@@ -22,5 +22,5 @@ python -m karbon
 
 ## Snapshots
 
-You can find the snapshots in the `.carbon_screenshots` folder within your home
+You can find the snapshots in the `.karbon_snapshots` folder within your home
 directory.
