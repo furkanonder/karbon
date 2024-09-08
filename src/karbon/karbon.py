@@ -1,6 +1,7 @@
-import time
 from contextlib import suppress
+from datetime import datetime
 from pathlib import Path
+from typing import Final
 
 import pygame as pg
 import pygame_gui as pg_gui
@@ -9,16 +10,20 @@ from pygame_gui.elements import UIButton
 from pygame_gui.windows import UIFileDialog
 from pynput import mouse
 
-LINE_COLOR = (64, 224, 208)
-WHITE = (255, 255, 255)
-YELLOW = (255, 255, 0)
-BLACK = (0, 0, 0)
+LINE_COLOR: Final = (64, 224, 208)
+WHITE: Final = (255, 255, 255)
+YELLOW: Final = (255, 255, 0)
+BLACK: Final = (0, 0, 0)
 
 
 class CustomUIFileDialog(UIFileDialog):
     """Custom file dialog to filter and show only directories."""
 
-    def update_current_file_list(self):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.current_file_list: list[tuple[str, str]] = []
+
+    def update_current_file_list(self) -> None:
         super().update_current_file_list()
         self.current_file_list = [
             (name, item_type) for name, item_type in self.current_file_list if item_type == "#directory_list_item"
@@ -27,7 +32,7 @@ class CustomUIFileDialog(UIFileDialog):
 
 class Karbon:
     def __init__(self) -> None:
-        # Initialize Pygame and set up the window
+        # Initialize pygame and set up the window
         pg.init()
         pg.display.set_caption("Karbon")
         screen = pg.display.Info()
@@ -61,6 +66,10 @@ class Karbon:
         self.mouse_listener.start()
 
     @staticmethod
+    def get_current_datetime() -> str:
+        return datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    @staticmethod
     def create_screenshot_folder() -> Path:
         directory_path = Path.home() / ".karbon_screenshots"
         if not directory_path.exists():
@@ -85,7 +94,10 @@ class Karbon:
                         self.bg.fill(BLACK)
                     # Take a snapshot
                     if event.ui_element == self.snapshot_btn:
-                        pg.image.save(self.bg, f"{screenshot_folder_path}/screenshot_snapshot_{time.time()}.jpg")
+                        pg.image.save(
+                            self.bg,
+                            f"{screenshot_folder_path}/snapshot_{self.get_current_datetime()}.png",
+                        )
                     # Show the file save dialog
                     if event.ui_element == self.save_btn:
                         f_dialog = CustomUIFileDialog(
@@ -106,7 +118,7 @@ class Karbon:
                     self.save_btn.enable()
                     f_dialog = None
                     if img_path:
-                        pg.image.save(self.bg, f"{img_path}/screenshot_{time.time()}.jpg")
+                        pg.image.save(self.bg, f"{img_path}/screenshot_{self.get_current_datetime()}.png")
                         img_path = None
                 self.ui_manager.process_events(event)
 
