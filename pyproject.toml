@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,22 +9,23 @@ description = "Turn mouse events into art!"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {file = "LICENSE.txt"}
-keywords = ["mouse tracking", "karbon"]
+keywords = ["mouse tracking", "mouse", "tracking", "karbon"]
 authors = [{ name = "Furkan Onder", email = "furkanonder@protonmail.com" }]
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: MIT License",
-    "Topic :: Games/Entertainment",
-    "Topic :: Artistic Software",
     "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: Unix",
-    "Operating System :: Microsoft :: Windows",
+    "Topic :: Games/Entertainment",
+    "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
+    "Topic :: Artistic Software",
 ]
 dependencies = [
     "pygame-ce==2.5.1",
