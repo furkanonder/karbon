@@ -1,25 +1,31 @@
 repos:
-
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
+      - id: docformatter
 
--   repo: https://github.com/psf/black
-    rev: 21.7b0
-    hooks:
-    -   id: black
+  -   repo: https://github.com/pre-commit/mirrors-mypy
+      rev: v1.11.1
+      hooks:
+      -   id: mypy
 
--   repo: https://github.com/PyCQA/isort
-    rev: 5.9.2
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
     hooks:
-      - id: isort
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-toml
+      - id: check-yaml
+      - id: debug-statements
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-docstring-first
 
--   repo: https://github.com/hakancelikdev/unimport
-    rev: 0.8.4
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.1
     hooks:
-      - id: unimport
-        args: [--remove, --include-star-import]
+      # Linter
+      - id: ruff
+        args: [--fix]
+      # Formatter
+      - id: ruff-format
