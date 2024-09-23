@@ -2,13 +2,15 @@ from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 from typing import Final
+import os
 
 import pygame as pg
 import pygame_gui as pg_gui
 from pygame_gui.core.utility import create_resource_path
-from pygame_gui.elements import UIButton
+from pygame_gui.elements import UIButton, UIDropDownMenu
 from pygame_gui.windows import UIFileDialog
 from pynput import mouse
+from screeninfo import get_monitors
 
 LINE_COLOR: Final = (64, 224, 208)
 WHITE: Final = (255, 255, 255)
@@ -35,35 +37,81 @@ class Karbon:
         # Initialize pygame and set up the window
         pg.init()
         pg.display.set_caption("Karbon")
-        screen = pg.display.Info()
-        w, h = screen.current_w, screen.current_h
-        self.window_surface = pg.display.set_mode((w, h), pg.RESIZABLE)
-        self.ui_manager = pg_gui.UIManager((w, h))
-        self.bg = pg.Surface((w, h))
+
+        # Get list of monitors
+        self.monitors = get_monitors()
+        self.monitor_names = [
+            f"Monitor {i + 1}: {m.width}x{m.height}" for i, m in enumerate(self.monitors)
+        ]
+
+        # Create initial window on primary monitor
+        self.current_monitor_index = 0
+        self.set_window_on_monitor(self.current_monitor_index)
+
+        self.ui_manager = pg_gui.UIManager((self.window_width, self.window_height))
+
+        self.bg = pg.Surface((self.window_width, self.window_height))
         self.bg.fill(BLACK)
         self.clock = pg.time.Clock()
+
         # Initialize buttons with their properties
         self.clear_btn = UIButton(
             relative_rect=pg.Rect(-220, -140, 140, 30),
             text="Clear",
             manager=self.ui_manager,
-            anchors={"left": "right", "right": "right", "top": "bottom", "bottom": "bottom"},
+            anchors={
+                "left": "right",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
         )
         self.snapshot_btn = UIButton(
             relative_rect=pg.Rect(-220, -190, 140, 30),
             text="Snapshot",
             manager=self.ui_manager,
-            anchors={"left": "right", "right": "right", "top": "bottom", "bottom": "bottom"},
+            anchors={
+                "left": "right",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
         )
         self.save_btn = UIButton(
             relative_rect=pg.Rect(-220, -240, 140, 30),
             text="Save as Image",
             manager=self.ui_manager,
-            anchors={"left": "right", "right": "right", "top": "bottom", "bottom": "bottom"},
+            anchors={
+                "left": "right",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
         )
+        self.monitor_dropdown = UIDropDownMenu(
+            options_list=self.monitor_names,
+            starting_option=self.monitor_names[self.current_monitor_index],
+            relative_rect=pg.Rect(-220, -290, 200, 30),
+            manager=self.ui_manager,
+            anchors={
+                "left": "right",
+                "right": "right",
+                "top": "bottom",
+                "bottom": "bottom",
+            },
+        )
+
         # Start mouse listener
         self.mouse_listener = mouse.Listener(on_move=self.on_move, on_click=self.on_click)
         self.mouse_listener.start()
+
+    def set_window_on_monitor(self, monitor_index: int) -> None:
+        monitor = self.monitors[monitor_index]
+        os.environ["SDL_VIDEO_WINDOW_POS"] = f"{monitor.x},{monitor.y}"
+        self.window_width, self.window_height = monitor.width, monitor.height
+        self.window_surface = pg.display.set_mode(
+            (self.window_width, self.window_height), pg.RESIZABLE
+        )
 
     @staticmethod
     def get_current_datetime() -> str:
@@ -87,19 +135,18 @@ class Karbon:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     is_running = False
-                # Handle button presses
+
+                # Process UI events
                 if event.type == pg_gui.UI_BUTTON_PRESSED:
-                    # Clear the screen
+                    # Handle button presses
                     if event.ui_element == self.clear_btn:
                         self.bg.fill(BLACK)
-                    # Take a snapshot
-                    if event.ui_element == self.snapshot_btn:
+                    elif event.ui_element == self.snapshot_btn:
                         pg.image.save(
                             self.bg,
                             f"{snapshot_folder_path}/snapshot_{self.get_current_datetime()}.png",
                         )
-                    # Show the file save dialog
-                    if event.ui_element == self.save_btn:
+                    elif event.ui_element == self.save_btn:
                         f_dialog = CustomUIFileDialog(
                             pg.Rect(160, 50, 440, 500),
                             self.ui_manager,
@@ -108,18 +155,86 @@ class Karbon:
                             allow_picking_directories=True,
                         )
                         self.save_btn.disable()
-                    if f_dialog and event.ui_element == f_dialog.parent_directory_button:
+                    elif f_dialog and event.ui_element == f_dialog.parent_directory_button:
                         f_dialog.current_file_path = Path(f_dialog.current_directory_path)
-                if event.type == pg_gui.UI_FILE_DIALOG_PATH_PICKED:
+
+                elif event.type == pg_gui.UI_DROP_DOWN_MENU_CHANGED:
+                    if event.ui_element == self.monitor_dropdown:
+                        selected_monitor_name = event.text
+                        self.current_monitor_index = self.monitor_names.index(
+                            selected_monitor_name
+                        )
+                        # Update window to new monitor
+                        self.set_window_on_monitor(self.current_monitor_index)
+                        # Recreate UI manager and background surface with new size
+                        self.ui_manager = pg_gui.UIManager(
+                            (self.window_width, self.window_height)
+                        )
+                        self.bg = pg.Surface((self.window_width, self.window_height))
+                        self.bg.fill(BLACK)
+                        # Re-add UI elements to the new UI manager
+                        self.clear_btn = UIButton(
+                            relative_rect=pg.Rect(-220, -140, 140, 30),
+                            text="Clear",
+                            manager=self.ui_manager,
+                            anchors={
+                                "left": "right",
+                                "right": "right",
+                                "top": "bottom",
+                                "bottom": "bottom",
+                            },
+                        )
+                        self.snapshot_btn = UIButton(
+                            relative_rect=pg.Rect(-220, -190, 140, 30),
+                            text="Snapshot",
+                            manager=self.ui_manager,
+                            anchors={
+                                "left": "right",
+                                "right": "right",
+                                "top": "bottom",
+                                "bottom": "bottom",
+                            },
+                        )
+                        self.save_btn = UIButton(
+                            relative_rect=pg.Rect(-220, -240, 140, 30),
+                            text="Save as Image",
+                            manager=self.ui_manager,
+                            anchors={
+                                "left": "right",
+                                "right": "right",
+                                "top": "bottom",
+                                "bottom": "bottom",
+                            },
+                        )
+                        self.monitor_dropdown = UIDropDownMenu(
+                            options_list=self.monitor_names,
+                            starting_option=self.monitor_names[self.current_monitor_index],
+                            relative_rect=pg.Rect(-220, -290, 200, 30),
+                            manager=self.ui_manager,
+                            anchors={
+                                "left": "right",
+                                "right": "right",
+                                "top": "bottom",
+                                "bottom": "bottom",
+                            },
+                        )
+
+                elif event.type == pg_gui.UI_FILE_DIALOG_PATH_PICKED:
                     with suppress(pg.error):
                         img_path = create_resource_path(event.text)
-                # Handle file dialog close event
-                if event.type == pg_gui.UI_WINDOW_CLOSE and event.ui_element == f_dialog:
-                    self.save_btn.enable()
-                    f_dialog = None
-                    if img_path:
-                        pg.image.save(self.bg, f"{img_path}/screenshot_{self.get_current_datetime()}.png")
-                        img_path = None
+
+                elif event.type == pg_gui.UI_WINDOW_CLOSE:
+                    if event.ui_element == f_dialog:
+                        self.save_btn.enable()
+                        f_dialog = None
+                        if img_path:
+                            pg.image.save(
+                                self.bg,
+                                f"{img_path}/screenshot_{self.get_current_datetime()}.png",
+                            )
+                            img_path = None
+
+                # Process the event with the UI manager
                 self.ui_manager.process_events(event)
 
             self.ui_manager.update(time_delta)
@@ -130,10 +245,26 @@ class Karbon:
         self.mouse_listener.stop()
 
     def on_click(self, x, y, button, pressed) -> None:
-        if button is button.left:
-            pg.draw.circle(self.bg, YELLOW, (x, y), 4)
-        elif button is button.right:
-            pg.draw.circle(self.bg, (128, 0, 128), (x, y), 6)
+        # Adjust coordinates relative to the selected monitor
+        monitor = self.monitors[self.current_monitor_index]
+        adjusted_x = x - monitor.x
+        adjusted_y = y - monitor.y
+
+        if 0 <= adjusted_x < self.window_width and 0 <= adjusted_y < self.window_height:
+            if button == mouse.Button.left:
+                pg.draw.circle(self.bg, YELLOW, (adjusted_x, adjusted_y), 4)
+            elif button == mouse.Button.right:
+                pg.draw.circle(self.bg, (128, 0, 128), (adjusted_x, adjusted_y), 6)
 
     def on_move(self, x, y) -> None:
-        pg.draw.line(self.bg, LINE_COLOR, (x, y), (x, y), 1)
+        # Get the current monitor
+        monitor = self.monitors[self.current_monitor_index]
+        # Adjust coordinates relative to the selected monitor
+        adjusted_x = x - monitor.x
+        adjusted_y = y - monitor.y
+
+        # Check if the adjusted coordinates are within the bounds of the monitor
+        if 0 <= adjusted_x < self.window_width and 0 <= adjusted_y < self.window_height:
+            pg.draw.line(
+                self.bg, LINE_COLOR, (adjusted_x, adjusted_y), (adjusted_x, adjusted_y), 1
+            )
