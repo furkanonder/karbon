@@ -10,7 +10,10 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = {file = "LICENSE.txt"}
 keywords = ["mouse tracking", "mouse", "tracking", "karbon"]
-authors = [{ name = "Furkan Onder", email = "furkanonder@protonmail.com" }]
+authors = [
+    { name = "Furkan Onder", email = "furkanonder@protonmail.com" },
+    {name = "Bahadır Araz", email = "bahadiraraz@protonmail.com"},
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: End Users/Desktop",
@@ -31,6 +34,7 @@ dependencies = [
     "pygame-ce==2.5.1",
     "pygame-gui==0.6.12",
     "pynput==1.7.6",
+    "screeninfo>=0.8.1",
 ]
 
 [project.urls]
