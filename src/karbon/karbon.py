@@ -206,17 +206,21 @@ class Karbon:
 
         self.mouse_listener.stop()
 
-    def on_click(self, x: int, y: int, button: mouse.Button, _pressed: bool) -> None:
-        adjusted_x, adjusted_y = x - self.current_monitor.x, y - self.current_monitor.y
-        # Check if the adjusted coordinates are within the bounds of the monitor
+    def adjust_mouse_coordinates(self, x: int, y: int) -> tuple[int, int] | None:
+        adjusted_x = x - self.current_monitor.x
+        adjusted_y = y - self.current_monitor.y
+        # Check if coordinates are within the current window bounds
         if 0 <= adjusted_x < self.window_width and 0 <= adjusted_y < self.window_height:
+            return adjusted_x, adjusted_y
+        return None
+
+    def on_click(self, x: int, y: int, button: mouse.Button, _pressed: bool) -> None:
+        if coords := self.adjust_mouse_coordinates(x, y):
             if button == mouse.Button.left:
-                pg.draw.circle(self.bg, YELLOW, (adjusted_x, adjusted_y), 4)
+                pg.draw.circle(self.bg, YELLOW, coords, 4)
             elif button == mouse.Button.right:
-                pg.draw.circle(self.bg, (128, 0, 128), (adjusted_x, adjusted_y), 6)
+                pg.draw.circle(self.bg, (128, 0, 128), coords, 6)
 
     def on_move(self, x: int, y: int) -> None:
-        adjusted_x, adjusted_y = x - self.current_monitor.x, y - self.current_monitor.y
-        # Check if the adjusted coordinates are within the bounds of the monitor
-        if 0 <= adjusted_x < self.window_width and 0 <= adjusted_y < self.window_height:
-            pg.draw.line(self.bg, LINE_COLOR, (adjusted_x, adjusted_y), (adjusted_x, adjusted_y), 1)
+        if coords := self.adjust_mouse_coordinates(x, y):
+            pg.draw.line(self.bg, LINE_COLOR, coords, coords, 1)
