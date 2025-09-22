@@ -51,6 +51,7 @@ dev = [
     "tox>=4.30.2",
     "mypy>=1.18.2",
     "ruff>=0.13.1",
+    "pytest>=8.4.2",
 ]
 
 [project.urls]
@@ -151,6 +152,9 @@ select = [
     "FLY",   # flynt
     "PERF",  # Perflint
     "RUF",   # Ruff-specific rules
+]
+ignore = [
+    "PLR2004", # Magic value used in comparison
 ]
 
 [tool.ruff.lint.mccabe]
