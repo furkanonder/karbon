@@ -134,4 +134,7 @@ dmypy.json
 pyvenv.cfg
 pip-selfcheck.json
 
+# Auto-generated version file
+src/karbon/_version.py
+
 # End of https://www.gitignore.io/api/python

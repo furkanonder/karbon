@@ -1,7 +1,7 @@
 from karbon.karbon import Karbon
 
 
-def main():
+def main() -> None:
     app = Karbon()
     app.run()
 
